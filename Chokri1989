@@ -1,0 +1,49 @@
+from kivy.app import App
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.label import Label
+from kivy.uix.textinput import TextInput
+from kivy.uix.button import Button
+from kivy.uix.popup import Popup
+
+class TankCalculator(App):
+    def build(self):
+        # Main layout
+        layout = BoxLayout(orientation='vertical', padding=20, spacing=10)
+
+        # Title
+        title = Label(text='Tank Filling Time Calculator\n(Capacity: 2000 m³, 1 cm = 2 m³, Flow Rate: 250 m³/hour)', 
+                      font_size=20, size_hint_y=None, height=100, text_size=(None, None),
+                      halign='center')
+        layout.add_widget(title)
+
+        # Initial height input
+        self.h1_input = TextInput(hint_text='Initial Height (cm)', multiline=False, input_filter='float')
+        layout.add_widget(Label(text='Initial Height (cm):'))
+        layout.add_widget(self.h1_input)
+
+        # Final height input
+        self.h2_input = TextInput(hint_text='Final Height (cm)', multiline=False, input_filter='float')
+        layout.add_widget(Label(text='Final Height (cm):'))
+        layout.add_widget(self.h2_input)
+
+        # Calculate button
+        calculate_btn = Button(text='Calculate Time', size_hint_y=None, height=50)
+        calculate_btn.bind(on_press=self.calculate_time)
+        layout.add_widget(calculate_btn)
+
+        # Result display area
+        self.result_label = Label(text='Enter heights and press Calculate!', font_size=16)
+        layout.add_widget(self.result_label)
+
+        return layout
+
+    def calculate_time(self, instance):
+        try:
+            h1 = float(self.h1_input.text or 0)
+            h2 = float(self.h2_input.text or 0)
+
+            if h2 <= h1:
+                self.show_popup('Error: Final height must be greater than initial height!')
+                return
+            if h2 > 1000:
+                self
